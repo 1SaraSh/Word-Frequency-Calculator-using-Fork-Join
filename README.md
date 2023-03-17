@@ -5,11 +5,11 @@ Number of cores you need to use, and Threshold can be editted depeding on your p
 <br><br>
 <p><i><b>The program will be reading text files from the dataset provided in the source code for this assignment.</b></i></p>
 
-The file has a collection of <b>TEXT</b> files. The directory used in this example is:<br>
+<p>The file has a collection of <b>TEXT</b> files. The directory used in this example is:<br>
 <i>"C:\\Users\\saraa\\OneDrive\\Desktop\\Distributed Systems\\Dataset\\train1".</i>
 <br>
 <p>Please specify your own directory with your text files, or the text files provided in "dataset" Folder. Edit the code in the areas with an X, with your preferred directory.</p> 
-<p><i>Note: All of "dataset" folder content is taken from Wikipedia.</i></p>
+<p><i>Note: All of "dataset" folder content is taken from Wikipedia.</i></p></p>
 
 <h3>Run</h3>
 Starting the program is simple, it will run all of the files and calculate the "and" and "then" words. 
