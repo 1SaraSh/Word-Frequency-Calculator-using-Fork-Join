@@ -3,7 +3,7 @@
 The aim of this project is to implement a word frequency calculator using the Fork/Join framework in Java.(Netbeans version 12.5 was formally used).The program should be able to read in multiple text files from a directory and calculate the frequency of the words "then" and "and" in each file. The program will use the Fork/Join framework to parallelize the frequency calculation across multiple files. The program should print the frequency values of each word in each file to the console. 
 Number of cores you need to use, and Threshold can be editted depeding on your preference and the files themselves
 <br><br>
-<p>_<b>The program will be reading text files from the dataset provided in the source code for this assignment.</b>_</p>
+<p><i><b>The program will be reading text files from the dataset provided in the source code for this assignment.</b></i></p>
 
 The file has a collection of <b>TEXT</b> files. The directory used in this example is:<br>
 <i>"C:\\Users\\saraa\\OneDrive\\Desktop\\Distributed Systems\\Dataset\\train1".</i>
