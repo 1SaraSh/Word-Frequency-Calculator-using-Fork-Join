@@ -17,5 +17,5 @@ Starting the program is simple, it will run all of the files and calculate the "
 
 <h3> Display:</h3>
 It will display the frequency of your word in each file, and print it. Also the execution time will be printed. 
-_Note: Time is calculated from start of ForkJoinPool till after printing._
+<i>Note: Time is calculated from start of ForkJoinPool till after printing.</i>
           
