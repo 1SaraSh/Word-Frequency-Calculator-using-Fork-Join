@@ -1,0 +1,101 @@
+/**
+ *
+ * @author saraa
+ */
+import java.io.File;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
+
+public class FilesWordFrequency {
+    public static void main(String[] args) {
+        File directory = new File("C:\\Users\\saraa\\OneDrive\\Desktop\\Distributed Systems\\Dataset\\train1");
+        File[] filesAndDirs = directory.listFiles();// lists all the files and directories contained within the specified directory and stores them in an array
+        String[] words = {"then", "and"}; // The words for which you need to compute the frequency
+        int processors = Runtime.getRuntime().availableProcessors();
+        int parallelism = processors; // number of cores you need to use
+        long startTime = System.nanoTime();
+        // Creates a new ForkJoinPool object named pool with the specified level of parallelism.
+        ForkJoinPool pool = new ForkJoinPool(parallelism);
+        // Create a WordFrequencyTask object
+        WordFrequencyTask task = new WordFrequencyTask(filesAndDirs, words);
+        // Submits a WordFrequencyTask object to the ForkJoinPool named pool for parallel execution and stores the result in a two-dimensional integer array named frequencies.
+        int[][] frequencies = pool.invoke(task);
+        // print the results per file
+        for (int i = 0; i < frequencies.length; i++) {
+        System.out.println("File " + i + ":");
+        for (int j = 0; j < frequencies[i].length; j++) {
+            System.out.println(words[j] + ": " + frequencies[i][j]);
+            }
+            System.out.println("");
+         }
+        long endTime = System.nanoTime();
+        System.out.println("Time taken: " + (endTime - startTime) + " nanoseconds");
+
+        }
+    }
+
+         class WordFrequencyTask extends RecursiveTask<int[][]> {
+        // the attributes are the files and the words
+        private final File[] files;
+        private final String[] words;
+       // WordFrequencyTask constructor
+        public WordFrequencyTask(File[] files, String[] words) {
+        this.files = files;
+        this.words = words;
+        }   
+        @Override
+        protected int[][] compute() {
+        // checks if the number of files to process is less than or equal to the THRESHOLD value
+        int THRESHOLD=10;
+        if (files.length <= THRESHOLD) {
+            // If this condition is true, the sequentialWordFrequency() method is called to process the files sequentially and return the resulting frequencies
+            return sequentialWordFrequency(files, words);
+        } else {
+            // Otherwise, the files are divided into two equal parts and two new WordFrequencyTask objects are created
+            int mid = files.length / 2;
+            File[] leftFiles = Arrays.copyOfRange(files, 0, mid);
+            File[] rightFiles = Arrays.copyOfRange(files, mid, files.length);
+            WordFrequencyTask leftTask = new WordFrequencyTask(leftFiles, words);
+            WordFrequencyTask rightTask = new WordFrequencyTask(rightFiles, words);
+
+            // The left task is then forked 
+            leftTask.fork();
+
+            // The right task is executed by calling its compute() method.
+            int[][] rightResult = rightTask.compute();
+
+            // The left task is then joined,
+            int[][] leftResult = leftTask.join();
+
+            // Return the results 
+            int[][] result = new int[files.length][words.length];
+            System.arraycopy(leftResult, 0, result, 0, leftResult.length);
+            System.arraycopy(rightResult, 0, result, leftResult.length, rightResult.length);
+            return result;
+        }}
+        
+        
+
+        // Here you find the SequentialWordFrequency method which compute the frequency of the words 
+        private static int[][] sequentialWordFrequency(File[] files, String[] words) {
+            int[][] frequencies = new int[files.length][words.length];
+            for (int i = 0; i < files.length; i++) {
+                try (Scanner scanner = new Scanner(files[i])) {
+                    while (scanner.hasNext()) {
+                        String word = scanner.next();
+                        for (int j = 0; j < words.length; j++) {
+                            if (word.equals(words[j])) {
+                                frequencies[i][j]++;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return frequencies;
+        }
+
+    }
